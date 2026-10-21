@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#063163">
+<title>Log in | GullySport Hub Partner</title>
+<link rel="icon" type="image/png" href="icons/brand-shield.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="auth">
+
+<main class="page">
+<div class="auth-card card">
+  <h1>Hub Partner</h1>
+  <p class="lead">Sign in with your GullySport partner account to manage your facilities and bookings.</p>
+  <div id="auth-error" class="alert" hidden></div>
+  <form id="login-form">
+    <label>Email <input type="email" id="email" autocomplete="email" required></label>
+    <label>Password <input type="password" id="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary btn-block" type="submit">Log in</button>
+  </form>
+  <p class="muted small">New partner? <a href="https://gullysport.ibullinnovation.com/partner-signup">Create a partner account</a>, then come back here.</p>
+</div>
+</main>
+<script type="module" src="js/pages/login.js"></script>
+</body>
+</html>

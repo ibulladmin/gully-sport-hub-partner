@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#063163">
+<title>Calendar | GullySport Hub Partner</title>
+<link rel="icon" type="image/png" href="icons/brand-shield.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="with-nav">
+<header class="topbar">
+  <a href="today.html" class="brand"><img src="icons/brand-shield.png" alt="" width="28" height="28"><span><b>Gully</b><i>Sport</i> <small>Hub Partner</small></span></a>
+  <button class="link-btn" data-logout>Log out</button>
+</header>
+<main class="page">
+<div class="toolbar">
+  <select id="facility" aria-label="Facility"></select>
+  <div class="date-nav">
+    <button class="btn btn-ghost" id="prev" aria-label="Previous day">‹</button>
+    <input type="date" id="date" aria-label="Date">
+    <button class="btn btn-ghost" id="next" aria-label="Next day">›</button>
+  </div>
+  <div class="seg" role="tablist">
+    <button role="tab" id="view-day" aria-selected="true">Day</button>
+    <button role="tab" id="view-week" aria-selected="false">Week</button>
+  </div>
+  <select id="week-court" aria-label="Court" hidden></select>
+</div>
+<p class="legend"><span class="cell free"></span>Free <span class="cell booked"></span>Booked <span class="cell held"></span>Payment in progress <span class="cell blackout"></span>Closed</p>
+<div id="grid" class="grid-wrap"></div>
+
+<dialog id="walkin">
+  <form method="dialog" id="walkin-form">
+    <h2>Add booking</h2>
+    <p id="walkin-slot" class="muted"></p>
+    <label>Slots <select id="walkin-len"></select></label>
+    <label>Name <input id="walkin-name" maxlength="60" required></label>
+    <label>Phone (optional) <input id="walkin-phone" type="tel" inputmode="tel" maxlength="15"></label>
+    <label>Source <select id="walkin-source"><option value="walk_in">Walk-in</option><option value="phone">Phone call</option><option value="recurring">Recurring</option></select></label>
+    <fieldset id="walkin-series" hidden>
+      <legend>Repeats</legend>
+      <div class="days" id="walkin-days"></div>
+      <label>Until <input type="date" id="walkin-until"></label>
+    </fieldset>
+    <label>Payment <select id="walkin-pay"><option value="unpaid">Not paid yet</option><option value="cash">Cash</option><option value="upi">UPI</option></select></label>
+    <p id="walkin-error" class="alert" hidden></p>
+    <div class="row-end">
+      <button class="btn btn-ghost" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn btn-primary" id="walkin-save" value="save">Add booking</button>
+    </div>
+  </form>
+</dialog>
+</main>
+<script type="module" src="js/pages/calendar.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Checks every PR and push to main: unit tests on the pure core modules, the
+# pinned web-common copy, and that every page's imports resolve.
+# Hosting deploys come later, once the gullysport-partner Hosting site exists
+# (same keyless Workload Identity setup as gullysport's deploy.yml).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run verify
