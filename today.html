@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#063163">
+<title>Today | GullySport Hub Partner</title>
+<link rel="icon" type="image/png" href="icons/brand-shield.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="with-nav">
+<header class="topbar">
+  <a href="today.html" class="brand"><img src="icons/brand-shield.png" alt="" width="28" height="28"><span><b>Gully</b><i>Sport</i> <small>Hub Partner</small></span></a>
+  <button class="link-btn" data-logout>Log out</button>
+</header>
+<main class="page">
+<div class="row-between">
+  <h1 id="today-title">Today</h1>
+  <select id="facility" aria-label="Facility"></select>
+</div>
+<section class="stats" id="stats"></section>
+<h2>Next up</h2>
+<div id="next" class="list"></div>
+</main>
+<script type="module" src="js/pages/today.js"></script>
+</body>
+</html>

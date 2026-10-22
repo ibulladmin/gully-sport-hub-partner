@@ -1,0 +1,13 @@
+{
+  "name": "web-common",
+  "version": "1.1.0",
+  "commit": "771de24",
+  "files": {
+    "checkout.js": "a7dd3bbd3944a75f6c9916ac55e3ca2419bd304c341469ff4e9657845d8d18ca",
+    "format.js": "1eb1834c77d101ee3bdf1c1e81198745dafbad92a8ced0bb1086cfbe8fda9a61",
+    "html.js": "ae040f1c12e0da99e078f79e4541fb1e36742772378608c60fae204143afb460",
+    "image.js": "063c34988565931384c743b2a35baf5eedd31edb556ea819b6bb99d8a878d7a7",
+    "share.js": "22032bfceecfe344e7f0fa420d5cd75906423401b00e4c3472aa0b0aa5c069aa",
+    "video.js": "927bc5ef28a7fcacc92fbdc2016a9801683908bc416b0f37b26f2de3b4d5bed6"
+  }
+}

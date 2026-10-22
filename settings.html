@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#063163">
+<title>Settings | GullySport Hub Partner</title>
+<link rel="icon" type="image/png" href="icons/brand-shield.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="with-nav">
+<header class="topbar">
+  <a href="today.html" class="brand"><img src="icons/brand-shield.png" alt="" width="28" height="28"><span><b>Gully</b><i>Sport</i> <small>Hub Partner</small></span></a>
+  <button class="link-btn" data-logout>Log out</button>
+</header>
+<main class="page">
+<h1>Settings</h1>
+<div class="toolbar"><select id="facility" aria-label="Facility"></select></div>
+<form id="settings-form" class="card">
+  <h2>Bookings</h2>
+  <label>Players can book up to <input type="number" id="window" min="1" max="180" step="1"> days ahead</label>
+  <label>Stop online bookings <input type="number" id="cutoff" min="0" max="1440" step="15"> minutes before a slot</label>
+  <label>Full refund if cancelled at least <input type="number" id="refund-hours" min="0" max="168" step="1"> hours before</label>
+  <button class="btn btn-primary">Save</button>
+</form>
+<section class="card">
+  <h2>Closures</h2>
+  <p class="muted">Close a court or the whole facility for maintenance, an event or a holiday. Players see the reason.</p>
+  <form id="blackout-form" class="row-wrap">
+    <select id="bo-court"></select>
+    <input type="date" id="bo-from" required aria-label="From">
+    <input type="date" id="bo-to" aria-label="To">
+    <input id="bo-reason" maxlength="80" placeholder="Reason">
+    <button class="btn btn-ghost">Add closure</button>
+  </form>
+  <ul id="blackouts" class="list"></ul>
+</section>
+<section class="card">
+  <h2>Staff</h2>
+  <p class="muted">Staff can manage the calendar and media for this facility. Inviting staff arrives with the backend's staff invite function; for now the IBULL team can add them.</p>
+  <ul id="staff" class="list"></ul>
+</section>
+<section class="card">
+  <h2>Google Calendar</h2>
+  <p class="muted">An iCal link for your bookings will appear here once the calendar feed is live.</p>
+</section>
+</main>
+<script type="module" src="js/pages/settings.js"></script>
+</body>
+</html>
