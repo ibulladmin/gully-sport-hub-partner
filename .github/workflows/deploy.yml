@@ -1,0 +1,110 @@
+# Deploys the Hub Partner app to Firebase Hosting (site gullysport-partner in
+# ibull-innovation). Hosting only: rules and functions live in ibull-functions.
+#   push to main   -> live deploy, then checks the live site responds
+#   pull request   -> preview channel deploy, URL posted as a PR comment (expires in 7 days)
+#   PR closed      -> its preview channel is deleted (a site holds at most 50)
+#
+# Auth is keyless (Workload Identity Federation), same as gullysport: GitHub's
+# OIDC token is exchanged for short-lived Google credentials. The provider and
+# service account come from repo variables GCP_WIF_PROVIDER and GCP_DEPLOY_SA.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write        # required to mint the OIDC token for Google auth
+  pull-requests: write   # preview URL comment
+
+concurrency:
+  group: deploy-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PROJECT_ID: ibull-innovation
+  SITE: gullysport-partner
+  SITE_URL: https://gullysport-partner.web.app
+  FIREBASE_TOOLS: firebase-tools@15
+
+jobs:
+  live:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Tests, web-common pin and page imports
+        run: npm test && npm run verify
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - name: Deploy
+        run: npx --yes ${{ env.FIREBASE_TOOLS }} deploy --only hosting --project "$PROJECT_ID" --non-interactive --message "${{ github.sha }}"
+
+      - name: Check live site
+        run: |
+          for i in 1 2 3 4 5; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL/login")
+            [ "$code" = "200" ] && { echo "Live site OK ($code)"; exit 0; }
+            echo "Got $code, retrying..."; sleep 10
+          done
+          echo "::error::$SITE_URL did not return 200 after deploy"; exit 1
+
+  preview:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Tests, web-common pin and page imports
+        run: npm test && npm run verify
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - name: Deploy preview channel
+        id: channel
+        run: |
+          npx --yes ${{ env.FIREBASE_TOOLS }} hosting:channel:deploy "pr-${{ github.event.pull_request.number }}" \
+            --expires 7d --project "$PROJECT_ID" --non-interactive --json > channel.json
+          url=$(node -e "const r=require('./channel.json').result; console.log(Object.values(r)[0].url)")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        uses: actions/github-script@v9
+        env:
+          PREVIEW_URL: ${{ steps.channel.outputs.url }}
+        with:
+          script: |
+            const marker = '<!-- firebase-preview -->';
+            const body = `${marker}\n**Preview:** ${process.env.PREVIEW_URL}/login\n\nCommit ${context.sha.slice(0, 7)} · expires in 7 days`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const mine = comments.find(c => c.body.includes(marker));
+            if (mine) await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            else await github.rest.issues.createComment({ owner, repo, issue_number, body });
+
+  # Merged or closed: drop its preview, so channels never pile up to the limit.
+  cleanup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7   # the Firebase CLI needs firebase.json
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - name: Delete the preview channel
+        run: npx --yes ${{ env.FIREBASE_TOOLS }} hosting:channel:delete "pr-${{ github.event.pull_request.number }}" --site "$SITE" --project "$PROJECT_ID" --force --non-interactive || echo "No preview channel for this PR (never deployed or already gone)."

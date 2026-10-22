@@ -27,4 +27,8 @@ images, prices read server-side only.
   Keep Firebase out of it, so the same code can price and validate slots
   server-side.
 - **CI:** `npm test` and `npm run verify` (web-common pin, page imports).
+- **Hosting site** `gullysport-partner` (https://gullysport-partner.web.app).
+  `deploy.yml`: PR → 7-day preview channel, `main` → live, closed PR → channel
+  deleted. Keyless Google auth from repo variables `GCP_WIF_PROVIDER` and
+  `GCP_DEPLOY_SA`. Hosting only.
 - Requirement IDs for this app: `GS-P`.
