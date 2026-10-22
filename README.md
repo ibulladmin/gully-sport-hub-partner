@@ -28,6 +28,13 @@ npm run verify       # web-common copy unchanged, every page import resolves
 | `js/common/` | Pinned copy of ibull-functions `web-common`; never edit by hand |
 | `docs/backend.md` | The rules, indexes and functions this app needs from ibull-functions |
 
+## Deploy
+
+`.github/workflows/deploy.yml` deploys to the `gullysport-partner` Hosting site
+(https://gullysport-partner.web.app): a 7-day preview channel per PR, live on
+merge to `main`. It signs in to Google keylessly, like gullysport, using the repo
+variables `GCP_WIF_PROVIDER` and `GCP_DEPLOY_SA`.
+
 ## Not here on purpose
 
 Security rules and Cloud Functions live only in **ibull-functions**. See
@@ -36,6 +43,5 @@ Security rules and Cloud Functions live only in **ibull-functions**. See
 ## Next steps
 
 - Backend pieces in ibull-functions (rules, Storage rules, indexes, `createOfflineBooking`, `cancelFacilityBooking`).
-- Firebase Hosting site `gullysport-partner` and a deploy workflow like gullysport's.
 - Capacitor shell for iOS and Android, copied from gullysport.
 - Map pin picker, mobile verification, staff invites, iCal link.

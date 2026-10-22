@@ -1,7 +1,6 @@
 # Checks every PR and push to main: unit tests on the pure core modules, the
 # pinned web-common copy, and that every page's imports resolve.
-# Hosting deploys come later, once the gullysport-partner Hosting site exists
-# (same keyless Workload Identity setup as gullysport's deploy.yml).
+# deploy.yml runs the same checks before each deploy.
 
 name: CI
 
